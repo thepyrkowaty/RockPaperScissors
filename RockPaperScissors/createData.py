@@ -4,6 +4,7 @@ import pickle
 import time
 import random
 import shutil
+import numpy as np
 
 CATEGORIES = ['Rock', 'Paper', 'Scissors', 'None']
 path = os.path.join(os.path.abspath(os.path.join(os.getcwd(), os.pardir)), 'Data')
@@ -37,10 +38,10 @@ except FileExistsError:
 # Prepare photo for model
 def preparePhoto(myImg):
     IMG_SIZE = 100
-    myImg = cv2.cvtColor(myImg, cv2.COLOR_BGR2GRAY)
+    myImg = cv2.cvtColor(myImg, cv2.COLOR_BGR2RGB)
     myImg = cv2.resize(myImg, (IMG_SIZE, IMG_SIZE))
     myImg = myImg/255.0
-    return myImg.reshape(-1, IMG_SIZE, IMG_SIZE, 1)
+    return myImg
 
 
 def drawArea(img, name):
@@ -72,7 +73,7 @@ while True:
     if gather:
         cv2.imwrite(os.path.join(photoPath, f'{photoIndex}.jpg'), handImg)
         photoIndex += 1
-        displayPhotoIndex +=1
+        displayPhotoIndex += 1
         trainingData.append([preparePhoto(handImg), CATEGORIES.index(CATEGORIES[index])])
         cv2.putText(img, f'Gathered {displayPhotoIndex} photos', (300, 450), cv2.FONT_ITALIC, 1, (255, 255, 255))
         numberOfTrainPhotos -= 1
@@ -107,7 +108,8 @@ while True:
         for features, label in trainingData:
             X.append(features)
             y.append(label)
-
+        X = np.array(X)
+        y = np.array(y)
         with open(os.path.join(path, 'X.pickle'), 'wb') as f1:
             pickle.dump(X, f1)
         with open(os.path.join(path, 'y.pickle'), 'wb') as f2:
