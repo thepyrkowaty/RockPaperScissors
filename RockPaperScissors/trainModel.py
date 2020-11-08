@@ -2,9 +2,8 @@ import os
 from sklearn import model_selection
 from tensorflow import get_logger
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Activation, Dropout, Flatten, Conv2D, MaxPooling2D, GlobalAveragePooling2D
+from tensorflow.keras.layers import Dense, Activation, Dropout, Flatten, Conv2D, MaxPooling2D
 import pickle
-import matplotlib.pyplot as plt
 get_logger().setLevel('INFO')
 
 path = os.path.join(os.path.abspath(os.path.join(os.getcwd(), os.pardir)), 'Data')
@@ -42,7 +41,5 @@ model.fit(x_train, y_train, batch_size=32, epochs=8, validation_split=0.1)
 loss, acc = model.evaluate(x_test, y_test)
 
 print(f'Loss={loss}, acc={acc}')
-
-print(y_train)
 
 model.save(os.path.join(path, 'model'))
